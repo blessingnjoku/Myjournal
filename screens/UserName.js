@@ -1,24 +1,46 @@
-import { View, Text, TextInput , StyleSheet, StatusBar, Dimensions} from 'react-native'
-import React from 'react'
+import { View, Text, TextInput , StyleSheet, StatusBar, Dimensions, ImageBackground} from 'react-native'
+import { useState } from 'react'
 import Colors from '../Components/constants/Colors';
+import BottomIcon from '../Components/BottomIcon';
+import book from '../assets/images/book.jpg'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const UserName = ({onFinish}) => {
+    const [name, setName]= useState('');
+    const handleOnchangeText =(text)=>{
+        setName(text);
 
-const UserName = () => {
+    }
+    const handleSubmit =async()=>{
+        const user={name:name}
+        await AsyncStorage.setItem('user', JSON.stringify(user));
+        if(onFinish)onFinish();
+    }
+    // console.log(user);
+
   return (
     <>
     <StatusBar hidden/>
     <View style={styles.container}>
-      <Text style={styles.Title}>Please enter your name to continue</Text>
-      <TextInput placeholder='Enter your name' style={styles.textInput}/>
+   
+    <Text style={styles.Title}>Please enter your name to continue</Text>
+      <TextInput placeholder='Enter your name' style={styles.textInput} value={name} onChangeText={handleOnchangeText}/>
+      {name?.trim().length >= 3 ?(
+            <BottomIcon antIcoName='arrowright' onPress={handleSubmit} />
+        ):null}
+  
+      
+      
     </View>
     </>
   )
 }
-const width   =Dimensions.get('window').width -50;
+const width = Dimensions.get('window').width -50;
 const styles = StyleSheet.create({
     container: {
         flex:1,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
+       
      
     },
     textInput:{
@@ -29,9 +51,9 @@ const styles = StyleSheet.create({
         borderRadius:10,
         padding:15,
         fontSie:25,
-        color:Colors.PRI
-
-
+        color:Colors.PRI,
+        marginBottom:10,
+        textTransform:'capitalize'
         
     },
 
