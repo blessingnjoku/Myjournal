@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, Modal, StatusBar, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Colors from './constants/Colors'
 import BottomIcon from './BottomIcon';
 
-const NoteModal = ({visible, onClose, onSubmit}) => {
+const NoteModal = ({visible, onClose, onSubmit, note, isEdit}) => {
 
 const [title, setTitle]= useState('');
 const [desc, setDesc]= useState('');
@@ -12,24 +12,51 @@ const [desc, setDesc]= useState('');
         Keyboard.dismiss();
     }
 
+
+    useEffect(()=>{
+        if(isEdit){
+            setTitle(note.title)
+            setDesc(note.desc)
+
+        }
+
+    },[isEdit])
+
     const handleOnchangeText =(text,valueFor)=>{
 
         if(valueFor === 'title')setTitle(text);
         if(valueFor === 'desc' ) setDesc(text);
     }
     const handleSubmit=()=>{
-        if(!title.trim() && !desc.trim())return onClose();
-        onSubmit(title, desc)
-        setDesc('');
-        setTitle('');
+        if(!title.trim() && !desc.trim()) return onClose();
+        if(isEdit){
+            onSubmit(title, desc, Date.now())
+
+        }else{
+            onSubmit(title, desc)
+            setDesc('');
+            setTitle('');
+        }
+        
+        onClose();
+
+    }
+    const closeModal=()=>{
+        if(isEdit){
+
+            setDesc('');
+            setTitle('');
+        }
+       
         onClose();
 
     }
     
+    
   return (
     <>
     <StatusBar hidden/>
-   <Modal visible={visible} animationType='fade'>
+   <Modal visible={visible} animationType = 'fade'>
    <View style={styles.container}>
    <TextInput style={[styles.input, styles.title]}  placeholder='Title' value={title} onChangeText={text => handleOnchangeText(text,'title')}/>
    <TextInput style={[styles.input, styles.desc]} placeholder="Your content" multiline  value={desc} onChangeText={text=>handleOnchangeText(text,'desc')}/>
@@ -38,7 +65,7 @@ const [desc, setDesc]= useState('');
    <View style={styles.btnContainer}>
    <BottomIcon size={15} antIcoName = 'check' onPress={handleSubmit}/>
    
-   {title.trim() || desc.trim()?(<BottomIcon size={15} antIcoName = 'close' style={{marginLeft:15}}/>
+   {title.trim() || desc.trim()?(<BottomIcon size={15} antIcoName = 'close' style={{marginLeft:15}} onPress={closeModal}/>
    
    ):null
    }

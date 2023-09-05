@@ -1,10 +1,9 @@
 import { View, Text, StyleSheet, TextInput} from 'react-native'
-import React from 'react'
 import Colors from '../Components/constants/Colors'
 
 const SearchScreen = ({containerStyle}) => {
   return (
-    <View style={[styles.container, {...containerStyle}]}>
+    <View style={[styles.container, { ...containerStyle}]}>
       <TextInput style={styles.searchbar} placeholder='search here... '></TextInput>
     </View>
   )

@@ -4,8 +4,11 @@ import Colors from '../Components/constants/Colors';
 import BottomIcon from '../Components/BottomIcon';
 import book from '../assets/images/book.jpg'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 const UserName = ({onFinish}) => {
-    const [name, setName]= useState('');
+    const [name, setName] = useState('');
     const handleOnchangeText =(text)=>{
         setName(text);
 
@@ -13,7 +16,7 @@ const UserName = ({onFinish}) => {
     const handleSubmit =async()=>{
         const user={name:name}
         await AsyncStorage.setItem('user', JSON.stringify(user));
-        if(onFinish)onFinish();
+        if(onFinish) return onFinish();
     }
     // console.log(user);
 
@@ -34,7 +37,8 @@ const UserName = ({onFinish}) => {
     </>
   )
 }
-const width = Dimensions.get('window').width -50;
+const { width } = Dimensions.get('window') - 50
+// const {width }= Dimensions.get('window').width -50;
 const styles = StyleSheet.create({
     container: {
         flex:1,
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
         height:50,
         borderRadius:10,
         padding:15,
-        fontSie:25,
+        fontSize:25,
         color:Colors.PRI,
         marginBottom:10,
         textTransform:'capitalize'
